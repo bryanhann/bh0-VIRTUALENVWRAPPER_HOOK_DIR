@@ -1,3 +1,27 @@
 #!/bin/bash
 # This hook is run after a new project is activated.
 
+# The name of the project is:
+project_name=$(basename ${PWD})
+
+# The main repo of the project is:
+dst=${PWD}/PRJ
+
+# The source url of the project is:
+url=https://github.com/bryanhann/${project_name}
+
+# Try to install the repo from source:
+[[ -d ${dst} ]] || {
+    git clone ${url} ${dst}
+}
+
+# If that failed, create a new one:
+[[ -d ${dst} ]] || {
+    mkdir -p ${dst}
+    pushd ${dst}
+    git init
+    echo "Project name: ${project_name}" > Readme.txt
+    git add Readme.txt
+    git commit -m "Initial commit"
+    popd
+}
